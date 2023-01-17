@@ -1,6 +1,6 @@
 #pragma once 
 #include <iostream> 
-#include <sstream> 
+#include <fstream>
 #include <string> 
 #include <iomanip> 
 #include <ctime> 
@@ -114,6 +114,8 @@ public:
 	};
 
 	IStrategy* create(const int& id);
+
+	bool check(int);
 	//{
 	//	typename FactoryMap::iterator it = _factory.find(id);
 	//	if (it != _factory.end())
