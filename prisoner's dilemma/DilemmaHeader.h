@@ -73,16 +73,16 @@ public:
 	int player1_pay_off = 0, player2_pay_off = 0, player3_pay_off = 0;
 	char player1_choice = 0, player2_choice = 0, player3_choice = 0;
 	RoundResult(int, int, int);
-	RoundResult(std::vector<char>);
+	RoundResult(std::vector<char>, int pay_off_matrix[8][6]);
 	RoundResult();
-
 	void SetChoice(int, int, int);
 	void SetPrisonersPayoff();
+	void SetPrisonersPayoff(int pay_off_matrix[8][6]);
 	std::vector<int> GetScore();
 };
 bool PlayersOfNewRounde(int*, int, int);
 
-Score Simulator(int, short, int, int, int, Score, std::vector<std::vector<char>>, std::map<int, IStrategy*>);
+Score Simulator(int pay_off_matrix[8][6], int, short, int, int, int, Score, std::vector<std::vector<char>>, std::map<int, IStrategy*>);
 
 class AbstractCreator
 {
@@ -100,26 +100,22 @@ public:
 
 class StrategyFactory {
 protected:
-	typedef std::map<int, AbstractCreator*> FactoryMap;
+	typedef std::map<std::string, AbstractCreator*> FactoryMap;
 	FactoryMap _factory;
 public:
 	StrategyFactory();
 
 	template <class C>
-	void add(const int& id)
+	void add(const std::string& id)//int& id
 	{
 		typename FactoryMap::iterator it = _factory.find(id);
 		if (it == _factory.end())
 			_factory[id] = new StrategyCreator<C>();
 	};
 
-	IStrategy* create(const int& id);
+	IStrategy* create(const std::string& id);//int& id
 
-	bool check(int);
-	//{
-	//	typename FactoryMap::iterator it = _factory.find(id);
-	//	if (it != _factory.end())
-	//		return it->second->create();
-	//	return 0;
-	//}
+	bool check(std::string);
 };
+
+bool CheckMatrix(int pay_off_matrix[8][6]);
