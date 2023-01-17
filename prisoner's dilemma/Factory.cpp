@@ -2,21 +2,21 @@
 
 
 StrategyFactory::StrategyFactory() {
-    add<StrategyRand>(1);
-    add<StrategyAlwaysC>(2);
-    add<StrategyAlwaysD>(3);
-    add<StrategyWinRound>(4);
-    add<StrategyTeamplay>(5);
-    add<StrategyRevengeful>(6);
+    add<StrategyRand>("StrategyRand");
+    add<StrategyAlwaysC>("StrategyAlwaysC");
+    add<StrategyAlwaysD>("StrategyAlwaysD");
+    add<StrategyWinRound>("StrategyWinRound");
+    add<StrategyTeamplay>("StrategyTeamplay");
+    add<StrategyRevengeful>("StrategyRevengeful");
 };
-IStrategy* StrategyFactory::create(const int& id) {
+IStrategy* StrategyFactory::create(const std::string& id) {
 
     typename FactoryMap::iterator it = _factory.find(id);
     if (it != _factory.end())
         return it->second->create();
     return 0;
 }
-bool StrategyFactory::check(int a) {
+bool StrategyFactory::check(std::string a) {
     typename FactoryMap::iterator it = _factory.find(a);
     if (it == _factory.end())
         return false;
