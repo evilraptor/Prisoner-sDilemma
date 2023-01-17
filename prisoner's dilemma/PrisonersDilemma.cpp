@@ -48,6 +48,45 @@
 //////////////////////////////////// 
 int main(int argc, char* argv[])
 {
+    //std::ifstream in;
+    //in.open("Matrix.txt"); // окрываем файл для чтения
+    ////std::ifstream inf{ "Matrix.txt" };
+    ////if (!inf)
+    ////{
+    ////    std::cerr << "Matrix.txt could not be opened" << std::endl;
+    ////    return -1;
+    ////}
+    //int pay_off_matrix[8][6] = { 0 };
+    //int lines_in_matrix = 0;
+
+    //while (in)
+    //{
+    //    //for (int i = 0; i < 2; i++) {
+    //        for (int j1 = 0; j1 < 3; j1++) {
+    //            //std::string strInput;
+    //            char a;
+    //            in >> a;
+    //            std::cout << a;
+    //            //inf >> strInput;
+    //            //pay_off_matrix[lines_in_matrix][j1] = std::stoi(strInput);
+    //            //std::cout << strInput << '\n';
+    //        }
+    //        for (int j2 = 0; j2 < 3; j2++) {
+    //            std::string strInput;
+    //            in >> strInput;
+    //            //pay_off_matrix[lines_in_matrix][j2] = std::stoi(strInput);
+    //            //std::cout << strInput<< '\n';
+    //        }
+    //        lines_in_matrix++;
+    //    //}
+    //    //std::string strInput;
+    //    //inf >> strInput;
+    //    //std::cout << strInput << '\n';
+    //}
+
+
+
+
     StrategyFactory factory;
     //factory.add<StrategyRand>(1);
     //factory.add<StrategyAlwaysC>(2);
@@ -55,7 +94,7 @@ int main(int argc, char* argv[])
     //factory.add<StrategyWinRound>(4);
     //factory.add<StrategyTeamplay>(5);
     //factory.add<StrategyRevengeful>(6);
-    int playerscount = 0;
+    int players_count = 0;
     short game_type = 0;
     typedef std::map<int, IStrategy*> Players;//1ое число номер игрока 2ое номер стратегии 
     Players players;//стратегии 
@@ -79,30 +118,48 @@ int main(int argc, char* argv[])
             case 'E'://69 
                 return 0;
             default:
+                short wrong_input_flag = 1;
                 int tmp2 = atoi(tmp);
-                typename Players::iterator it = players.find(playerscount);
-                if (it == players.end())
-                    players[playerscount] = factory.create(tmp2);
-                game_type = 0;
-                playerscount++;
+                //typename Players::iterator it = players.find(players_count);
+                //if (it == players.end()) {
+                //    players[players_count] = factory.create(tmp2);
+
+                //}
+                bool strategy_existence_flag = factory.check(tmp2);
+                if (strategy_existence_flag == false) {
+                    std::cout << "there is no such strategy\n";
+                }
+                else {
+                    players[players_count] = factory.create(tmp2);
+                    //game_type = 0;
+                    players_count++;
+                }
             }
         }
         std::cout << "steps count: ";
         std::cin >> game_steps_number;
+        if ((players_count < 3) || ((players_count != 3) && ((game_type == 1) || (game_type == 2)))) {
+            std::cout << "wrong players count";
+            return -1;
+        }
+        if (game_steps_number < 1) {
+            std::cout << "wrong steps count";
+            return -1;
+        }
 
         Score score;
         std::vector<std::vector<char>> roundschoices(game_steps_number);//вектор векторов ходов 
         if (game_type == 3) {//это с турниром 
-            int* players_of_this_rounde = new int[playerscount];
-            for (int i = 0; i < playerscount; i++)players_of_this_rounde[i] = i + 1;
+            int* players_of_this_rounde = new int[players_count];
+            for (int i = 0; i < players_count; i++)players_of_this_rounde[i] = i + 1;
             int players_count_in_single_game = 3;
             //Print(a, m); 
             for (int i = 0; i < players_count_in_single_game; i++) std::cout << players_of_this_rounde[i] << " ";
             std::cout << "\n";
             score = Simulator(game_steps_number, game_type, players_of_this_rounde[0], players_of_this_rounde[1], players_of_this_rounde[2], score, roundschoices, players);
-            if (playerscount >= players_count_in_single_game)
+            if (players_count >= players_count_in_single_game)
             {
-                while (PlayersOfNewRounde(players_of_this_rounde, playerscount, players_count_in_single_game)) {
+                while (PlayersOfNewRounde(players_of_this_rounde, players_count, players_count_in_single_game)) {
                     for (int i = 0; i < players_count_in_single_game; i++) std::cout << players_of_this_rounde[i] << " ";
                     std::cout << "\n";
                     score = Simulator(game_steps_number, game_type, players_of_this_rounde[0], players_of_this_rounde[1], players_of_this_rounde[2], score, roundschoices, players);
@@ -139,30 +196,43 @@ int main(int argc, char* argv[])
             case 'E'://69 
                 return 0;
             default:
+                short wrong_input_flag = 1;
                 int tmp2 = atoi(&tmp);
                 //int tmp2 = tmp;
-                typename Players::iterator it = players.find(playerscount);
-                if (it == players.end())
-                    players[playerscount] = factory.create(tmp2);
-                game_type = 0;
-                playerscount++;
+                bool strategy_existence_flag = factory.check(tmp2);
+                if (strategy_existence_flag == false) {
+                    std::cout << "there is no such strategy\n";
+                }
+                else {
+                    players[players_count] = factory.create(tmp2);
+                    //game_type = 0;
+                    players_count++;
+                }
             }
         }
         game_steps_number = atoi(argv[argc - 1]);
+        if ((players_count < 3) || ((players_count != 3) && ((game_type == 1) || (game_type == 2)))) {
+            std::cout << "wrong players count";
+            return -1;
+        }
+        if (game_steps_number < 1) {
+            std::cout << "wrong steps count";
+            return -1;
+        }
         //}
         Score score;
         std::vector<std::vector<char>> roundschoices(game_steps_number);//вектор векторов ходов 
         if (game_type == 3) {//это с турниром 
-            int* players_of_this_rounde = new int[playerscount];
-            for (int i = 0; i < playerscount; i++)players_of_this_rounde[i] = i + 1;
+            int* players_of_this_rounde = new int[players_count];
+            for (int i = 0; i < players_count; i++)players_of_this_rounde[i] = i + 1;
             int players_count_in_single_game = 3;
             //Print(a, m); 
             for (int i = 0; i < players_count_in_single_game; i++) std::cout << players_of_this_rounde[i] << " ";
             std::cout << "\n";
             score = Simulator(game_steps_number, game_type, players_of_this_rounde[0], players_of_this_rounde[1], players_of_this_rounde[2], score, roundschoices, players);
-            if (playerscount >= players_count_in_single_game)
+            if (players_count >= players_count_in_single_game)
             {
-                while (PlayersOfNewRounde(players_of_this_rounde, playerscount, players_count_in_single_game)) {
+                while (PlayersOfNewRounde(players_of_this_rounde, players_count, players_count_in_single_game)) {
                     for (int i = 0; i < players_count_in_single_game; i++) std::cout << players_of_this_rounde[i] << " ";
                     std::cout << "\n";
                     score = Simulator(game_steps_number, game_type, players_of_this_rounde[0], players_of_this_rounde[1], players_of_this_rounde[2], score, roundschoices, players);
