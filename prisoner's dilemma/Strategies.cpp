@@ -1,7 +1,8 @@
 #include "DilemmaHeader.h" 
 
-char IStrategy::GetChoise(short game_type, int p, std::vector<int> _score, std::vector<std::vector<char>> _roundes, std::vector<char> _roundechoises) { return 0; };
-char Strategy1::GetChoise(short game_type, int p, std::vector<int> _score, std::vector<std::vector<char>> _roundes, std::vector<char> _roundechoises) {
+char IStrategy::Getchoice(short game_type, int p, std::vector<int> _score, std::vector<std::vector<char>> _roundes, std::vector<char> _roundechoices) { return 0; };
+IStrategy::~IStrategy() {};
+char StrategyRand::Getchoice(short game_type, int p, std::vector<int> _score, std::vector<std::vector<char>> _roundes, std::vector<char> _roundechoices) {
     char answer;
     srand(int(time(NULL)));
     int tmp = rand() % 2;
@@ -21,7 +22,7 @@ char Strategy1::GetChoise(short game_type, int p, std::vector<int> _score, std::
         return answer;
     }
 };
-char Strategy2::GetChoise(short game_type, int p, std::vector<int> _score, std::vector<std::vector<char>> _roundes, std::vector<char> _roundechoises) {
+char StrategyAlwaysC::Getchoice(short game_type, int p, std::vector<int> _score, std::vector<std::vector<char>> _roundes, std::vector<char> _roundechoices) {
     char answer;
     answer = 'C';
     if (game_type == 1) {
@@ -32,7 +33,7 @@ char Strategy2::GetChoise(short game_type, int p, std::vector<int> _score, std::
         return answer;
     }
 };
-char Strategy3::GetChoise(short game_type, int p, std::vector<int> _score, std::vector<std::vector<char>> _roundes, std::vector<char> _roundechoises) {
+char StrategyAlwaysD::Getchoice(short game_type, int p, std::vector<int> _score, std::vector<std::vector<char>> _roundes, std::vector<char> _roundechoices) {
     char answer;
     answer = 'D';
     if (game_type == 1) {
@@ -43,18 +44,19 @@ char Strategy3::GetChoise(short game_type, int p, std::vector<int> _score, std::
         return answer;
     }
 };
-char Strategy4::GetChoise(short game_type, int p, std::vector<int> _score, std::vector<std::vector<char>> _roundes, std::vector<char> _roundechoises) {
-    int max = _score[0];
-    if (max < _score[1])max = _score[1];
-    if (max < _score[2])max = _score[2];
+char StrategyWinRound::Getchoice(short game_type, int p, std::vector<int> _score, std::vector<std::vector<char>> _roundes, std::vector<char> _roundechoices) {
+    int max = 0;
+    if ((max < _score[0]) && (p != 0))max = _score[0];;
+    if ((max < _score[1]) && (p != 1))max = _score[1];
+    if ((max < _score[2]) && (p != 2))max = _score[2];
     int ownscore = _score[p];
 
     char answer;
     if (ownscore <= max)
         answer = 'D';
     else {
-        Strategy1 strategy1;
-        answer = strategy1.GetChoise(0, -1, _score, _roundes, _roundechoises);
+        StrategyRand strategy1;
+        answer = strategy1.Getchoice(0, -1, _score, _roundes, _roundechoices);
     }
 
     if (game_type == 1) {
@@ -65,36 +67,48 @@ char Strategy4::GetChoise(short game_type, int p, std::vector<int> _score, std::
         return answer;
     }
 };
-char Strategy5::GetChoise(short game_type, int p, std::vector<int> _score, std::vector<std::vector<char>> _roundes, std::vector<char> _roundechoises) {
+char StrategyTeamplay::Getchoice(short game_type, int p, std::vector<int> _score, std::vector<std::vector<char>> _roundes, std::vector<char> _roundechoices) {
     char answer = 0;
-
-    if ((counter < 12) && (game_type == -1)) {
-        switch (counter)
+    int tmp = counter;
+    if ((tmp < 12)/* && (game_type == -1)*/) {
+        switch (tmp)
         {
         case 0:
             answer = 'C';
+            break;
         case 1:
             answer = 'D';
+            break;
         case 2:
             answer = 'C';
+            break;
         case 3:
             answer = 'C';
+            break;
         case 4:
             answer = 'C';
+            break;
         case 5:
             answer = 'D';
+            break;
         case 6:
             answer = 'D';
+            break;
         case 7:
             answer = 'C';
+            break;
         case 8:
             answer = 'D';
+            break;
         case 9:
             answer = 'C';
+            break;
         case 10:
             answer = 'D';
+            break;
         case 11:
             answer = 'C';
+            break;
         }
     }
     else if ((counter >= 12) && (ff == -1)) {
@@ -104,18 +118,23 @@ char Strategy5::GetChoise(short game_type, int p, std::vector<int> _score, std::
             acc1.push_back(a[1]);
             acc2.push_back(a[2]);
         }
+
+
+
+
+
         v0v1 = (acc0 == acc1);
         v0v2 = (acc0 == acc2);
         v1v2 = (acc1 == acc2);
-        if (v0v1 == true)game_type = 1;
-        else if (v0v2 == true)game_type = 2;
-        else if (v1v2 == true)game_type = 3;
+        if (v0v1 == true)ff = 1;
+        else if (v0v2 == true)ff = 2;
+        else if (v1v2 == true)ff = 3;
         else
-            game_type = 0;
+            ff = 0;
     }
 
-    if ((game_type > 0) && (game_type != -1)) {
-        if (game_type == 1) {
+    if ((ff > 0) && (ff != -1)) {
+        if (ff == 1) {
             if (p == 0) {
                 if (_score[0] >= _score[1]) answer = 'D';
                 else answer = 'C';
@@ -125,7 +144,7 @@ char Strategy5::GetChoise(short game_type, int p, std::vector<int> _score, std::
                 else answer = 'D';
             }
         }
-        else if (game_type == 2) {
+        else if (ff == 2) {
             if (p == 0) {
                 if (_score[0] >= _score[2]) answer = 'D';
                 else answer = 'C';
@@ -135,31 +154,43 @@ char Strategy5::GetChoise(short game_type, int p, std::vector<int> _score, std::
                 else answer = 'D';
             }
         }
-        else if (game_type == 3) {
+        else if (ff == 3) {
             if (p == 1) {
                 if (_score[1] >= _score[2]) answer = 'D';
                 else answer = 'C';
             }
             if (p == 2) {
-                if (_score[1] > _score[2]) answer = 'C';
+                if (_score[1] >= _score[2]) answer = 'C';
                 else answer = 'D';
             }
         }
     }
-    else answer = 'D';
+    else if (ff == 0)answer = 'D';
 
-
+    if (game_type==1)//||(game_type == 3))
+    {
+        std::cout<<answer<<" ";
+    }
     counter++;
     return answer;
 };
-char Strategy6::GetChoise(short game_type, int p, std::vector<int> _score, std::vector<std::vector<char>> _roundes, std::vector<char> _roundechoises) {
+char StrategyRevengeful::Getchoice(short game_type, int p, std::vector<int> _score, std::vector<std::vector<char>> _roundes, std::vector<char> _roundechoices) {
     char answer = 0;
-    if (((_roundechoises[0] == 'D') && (p != 0)) || ((_roundechoises[1] == 'D') && (p != 1)) || ((_roundechoises[2] == 'D') && (p != 2))) {
+    if (((_roundechoices[0] == 'D') && (p != 0)) || ((_roundechoices[1] == 'D') && (p != 1)) || ((_roundechoices[2] == 'D') && (p != 2))) {
         int tmp = rand() / 3;
         if (tmp == 2)
             answer = 'C';
         else
             answer = 'D';
+    }
+    else
+    {
+        answer = 'C';
+    }
+
+    if (game_type == 1) //|| (game_type == 3))
+    {
+        std::cout << answer << " ";
     }
     return answer;
 };
