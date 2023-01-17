@@ -48,41 +48,26 @@
 //////////////////////////////////// 
 int main(int argc, char* argv[])
 {
-    //std::ifstream in;
-    //in.open("Matrix.txt"); // окрываем файл для чтения
-    ////std::ifstream inf{ "Matrix.txt" };
-    ////if (!inf)
-    ////{
-    ////    std::cerr << "Matrix.txt could not be opened" << std::endl;
-    ////    return -1;
-    ////}
-    //int pay_off_matrix[8][6] = { 0 };
-    //int lines_in_matrix = 0;
+    std::ifstream in;
+    in.open("Matrix.txt"); // окрываем файл для чтения
+    if (!in)
+    {
+        std::cerr << "Matrix.txt could not be opened" << std::endl;
+        return -1;
+    }
 
-    //while (in)
-    //{
-    //    //for (int i = 0; i < 2; i++) {
-    //        for (int j1 = 0; j1 < 3; j1++) {
-    //            //std::string strInput;
-    //            char a;
-    //            in >> a;
-    //            std::cout << a;
-    //            //inf >> strInput;
-    //            //pay_off_matrix[lines_in_matrix][j1] = std::stoi(strInput);
-    //            //std::cout << strInput << '\n';
-    //        }
-    //        for (int j2 = 0; j2 < 3; j2++) {
-    //            std::string strInput;
-    //            in >> strInput;
-    //            //pay_off_matrix[lines_in_matrix][j2] = std::stoi(strInput);
-    //            //std::cout << strInput<< '\n';
-    //        }
-    //        lines_in_matrix++;
-    //    //}
-    //    //std::string strInput;
-    //    //inf >> strInput;
-    //    //std::cout << strInput << '\n';
-    //}
+    int pay_off_matrix[8][6] = { 0 };
+    int lines_in_matrix = 0;
+    int counter = 0;
+    while (!in.eof())// пробегаем пока не встретим конец файла eof
+    {
+        char temp;
+        in >> temp;//в пустоту считываем из файла числа
+        int temp2 = (int)temp;
+        pay_off_matrix[lines_in_matrix][counter] = temp2;
+        //std::cout << temp;
+        //count++;// увеличиваем счетчик числа чисел
+    }
 
 
 
