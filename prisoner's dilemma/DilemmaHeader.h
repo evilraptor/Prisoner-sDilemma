@@ -10,26 +10,27 @@
 class IStrategy {
 public:
 	//int score = 0; 
-	virtual char GetChoise(short f, int p, std::vector<int> _score, std::vector<std::vector<char>> _roundes, std::vector<char> _roundechoises);
+	virtual char Getchoice(short f, int p, std::vector<int> _score, std::vector<std::vector<char>> _roundes, std::vector<char> _roundechoices);
+	//virtual ~IStrategy();
 	virtual ~IStrategy();
 };
-class Strategy1 :public IStrategy {
+class StrategyRand :public IStrategy {
 public:
-	char GetChoise(short f, int p, std::vector<int> _score, std::vector<std::vector<char>> _roundes, std::vector<char> _roundechoises) override;
+	char Getchoice(short f, int p, std::vector<int> _score, std::vector<std::vector<char>> _roundes, std::vector<char> _roundechoices) override;
 };
-class Strategy2 :public IStrategy {
+class StrategyAlwaysC :public IStrategy {
 public:
-	char GetChoise(short f, int p, std::vector<int> _score, std::vector<std::vector<char>> _roundes, std::vector<char> _roundechoises) override;
+	char Getchoice(short f, int p, std::vector<int> _score, std::vector<std::vector<char>> _roundes, std::vector<char> _roundechoices) override;
 };
-class Strategy3 :public IStrategy {
+class StrategyAlwaysD :public IStrategy {
 public:
-	char GetChoise(short f, int p, std::vector<int> _score, std::vector<std::vector<char>> _roundes, std::vector<char> _roundechoises) override;
+	char Getchoice(short f, int p, std::vector<int> _score, std::vector<std::vector<char>> _roundes, std::vector<char> _roundechoices) override;
 };
-class Strategy4 :public IStrategy {
+class StrategyWinRound :public IStrategy {
 public:
-	char GetChoise(short f, int p, std::vector<int> _score, std::vector<std::vector<char>> _roundes, std::vector<char> _roundechoises) override;
+	char Getchoice(short f, int p, std::vector<int> _score, std::vector<std::vector<char>> _roundes, std::vector<char> _roundechoices) override;
 };
-class Strategy5 :public IStrategy {
+class StrategyTeamplay :public IStrategy {
 private:
 	int counter = 0;
 	int ff = -1;
@@ -41,11 +42,11 @@ private:
 	bool v0v2 = 0;
 	bool v1v2 = 0;
 public:
-	char GetChoise(short f, int p, std::vector<int> _score, std::vector<std::vector<char>> _roundes, std::vector<char> _roundechoises) override;
+	char Getchoice(short f, int p, std::vector<int> _score, std::vector<std::vector<char>> _roundes, std::vector<char> _roundechoices) override;
 };
-class Strategy6 :public IStrategy {
+class StrategyRevengeful :public IStrategy {
 public:
-	char GetChoise(short f, int p, std::vector<int> _score, std::vector<std::vector<char>> _roundes, std::vector<char> _roundechoises) override;
+	char Getchoice(short f, int p, std::vector<int> _score, std::vector<std::vector<char>> _roundes, std::vector<char> _roundechoices) override;
 };
 
 
@@ -70,7 +71,7 @@ public:
 class RoundResult {
 public:
 	int player1_pay_off = 0, player2_pay_off = 0, player3_pay_off = 0;
-	char player1_choise = 0, player2_choise = 0, player3_choise = 0;
+	char player1_choice = 0, player2_choice = 0, player3_choice = 0;
 	RoundResult(int, int, int);
 	RoundResult(std::vector<char>);
 	RoundResult();
@@ -82,3 +83,41 @@ public:
 bool PlayersOfNewRounde(int*, int, int);
 
 Score Simulator(int, short, int, int, int, Score, std::vector<std::vector<char>>, std::map<int, IStrategy*>);
+
+class AbstractCreator
+{
+public:
+	//virtual fooCreator() {} 
+	virtual IStrategy* create() const = 0;
+	//virtual ~abstractFooCreator();
+};
+template <class C>
+class StrategyCreator : public AbstractCreator
+{
+public:
+	virtual IStrategy* create() const { return new C(); }
+};
+
+class StrategyFactory {
+protected:
+	typedef std::map<int, AbstractCreator*> FactoryMap;
+	FactoryMap _factory;
+public:
+	StrategyFactory();
+
+	template <class C>
+	void add(const int& id)
+	{
+		typename FactoryMap::iterator it = _factory.find(id);
+		if (it == _factory.end())
+			_factory[id] = new StrategyCreator<C>();
+	};
+
+	IStrategy* create(const int& id);
+	//{
+	//	typename FactoryMap::iterator it = _factory.find(id);
+	//	if (it != _factory.end())
+	//		return it->second->create();
+	//	return 0;
+	//}
+};
