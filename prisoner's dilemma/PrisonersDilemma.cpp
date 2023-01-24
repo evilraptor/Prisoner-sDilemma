@@ -1,51 +1,6 @@
 // prisoner's dilemma.cpp 
 #include "DilemmaHeader.h" 
 
-//class AbstractCreator
-//{
-//public:
-//    //virtual fooCreator() {} 
-//    virtual IStrategy* create() const = 0;
-//    //virtual ~abstractFooCreator();
-//};
-//
-//template <class C>
-//class StrategyCreator : public AbstractCreator
-//{
-//public:
-//    virtual IStrategy* create() const { return new C(); }
-//};
-//
-//class StrategyFactory
-//{
-//protected:
-//    typedef std::map<int, AbstractCreator*> FactoryMap;
-//    FactoryMap _factory;
-//
-//public:
-//    //FooFactory(); 
-//    //~virtual FooFactory(); 
-//
-//    template <class C>
-//    void add(const int& id)
-//    {
-//        typename FactoryMap::iterator it = _factory.find(id);
-//        if (it == _factory.end())
-//            _factory[id] = new StrategyCreator<C>();
-//    }
-//
-//    IStrategy* create(const int& id)
-//    {
-//        typename FactoryMap::iterator it = _factory.find(id);
-//        if (it != _factory.end())
-//            return it->second->create();
-//        return 0;
-//    }
-//    ~StrategyFactory() {
-//
-//    };
-//};
-//////////////////////////////////// 
 int main(int argc, char* argv[])
 {
     std::ifstream in;
@@ -72,7 +27,7 @@ int main(int argc, char* argv[])
         if (counter > 5) {
             counter = 0;
             lines_in_matrix++;
-            }
+        }
         //std::cout << temp;
         //count++;// увеличиваем счетчик числа чисел
     }
@@ -101,7 +56,7 @@ int main(int argc, char* argv[])
             switch (tmp[0])
             {
             case 'H':
-                std::cout << "available strategies:\n"<<"StrategyRand, StrategyAlwaysC, StrategyAlwaysD, StrategyWinRound, StrategyTeamplay, StrategyRevengeful\n"<<"also 1st u put players then gamemode";
+                std::cout << "available strategies:\n" << "StrategyRand, StrategyAlwaysC, StrategyAlwaysD, StrategyWinRound, StrategyTeamplay, StrategyRevengeful\n" << "also 1st u put players then gamemode\n";
                 break;
             case 'D'://68 
                 game_type = 1;
@@ -130,6 +85,7 @@ int main(int argc, char* argv[])
                     players[players_count] = factory.create(tmp/*2*/);
                     //game_type = 0;
                     players_count++;
+                    std::cout << "players count now: " << players_count << "\n";
                 }
             }
         }
@@ -153,13 +109,13 @@ int main(int argc, char* argv[])
             //Print(a, m); 
             for (int i = 0; i < players_count_in_single_game; i++) std::cout << players_of_this_rounde[i] << " ";
             std::cout << "\n";
-            score = Simulator(pay_off_matrix,game_steps_number, game_type, players_of_this_rounde[0], players_of_this_rounde[1], players_of_this_rounde[2], score, roundschoices, players);
+            score = Simulator(pay_off_matrix, game_steps_number, game_type, players_of_this_rounde[0], players_of_this_rounde[1], players_of_this_rounde[2], score, roundschoices, players);
             if (players_count >= players_count_in_single_game)
             {
                 while (PlayersOfNewRounde(players_of_this_rounde, players_count, players_count_in_single_game)) {
                     for (int i = 0; i < players_count_in_single_game; i++) std::cout << players_of_this_rounde[i] << " ";
                     std::cout << "\n";
-                    score = Simulator(pay_off_matrix,game_steps_number, game_type, players_of_this_rounde[0], players_of_this_rounde[1], players_of_this_rounde[2], score, roundschoices, players);
+                    score = Simulator(pay_off_matrix, game_steps_number, game_type, players_of_this_rounde[0], players_of_this_rounde[1], players_of_this_rounde[2], score, roundschoices, players);
                     //score.MakeItZero();
                 }
             }
@@ -168,7 +124,7 @@ int main(int argc, char* argv[])
         }
         else if ((game_type == 1) || (game_type == 2)) {//ну и без 
             std::cout << "do something\n";
-            score = Simulator(pay_off_matrix,game_steps_number, game_type, 0, 1, 2, score, roundschoices, players);
+            score = Simulator(pay_off_matrix, game_steps_number, game_type, 0, 1, 2, score, roundschoices, players);
             score.ShowBestGlobalScore();
             return 0;
         }
@@ -183,7 +139,7 @@ int main(int argc, char* argv[])
             switch (tmp[0])
             {
             case 'H':
-                std::cout << "available strategies:\n" << "StrategyRand, StrategyAlwaysC, StrategyAlwaysD, StrategyWinRound, StrategyTeamplay, StrategyRevengeful\n" << "also 1st u put players then gamemode";
+                std::cout << "available strategies:\n" << "StrategyRand, StrategyAlwaysC, StrategyAlwaysD, StrategyWinRound, StrategyTeamplay, StrategyRevengeful\n" << "also 1st u put players then gamemode\n";
                 break;
             case 'D'://68 
                 game_type = 1;
@@ -208,6 +164,7 @@ int main(int argc, char* argv[])
                     players[players_count] = factory.create(tmp/*2*/);
                     //game_type = 0;
                     players_count++;
+                    std::cout << "players count now: " << players_count << "\n";
                 }
             }
         }
@@ -230,13 +187,13 @@ int main(int argc, char* argv[])
             //Print(a, m); 
             for (int i = 0; i < players_count_in_single_game; i++) std::cout << players_of_this_rounde[i] << " ";
             std::cout << "\n";
-            score = Simulator(pay_off_matrix,game_steps_number, game_type, players_of_this_rounde[0], players_of_this_rounde[1], players_of_this_rounde[2], score, roundschoices, players);
+            score = Simulator(pay_off_matrix, game_steps_number, game_type, players_of_this_rounde[0], players_of_this_rounde[1], players_of_this_rounde[2], score, roundschoices, players);
             if (players_count >= players_count_in_single_game)
             {
                 while (PlayersOfNewRounde(players_of_this_rounde, players_count, players_count_in_single_game)) {
                     for (int i = 0; i < players_count_in_single_game; i++) std::cout << players_of_this_rounde[i] << " ";
                     std::cout << "\n";
-                    score = Simulator(pay_off_matrix,game_steps_number, game_type, players_of_this_rounde[0], players_of_this_rounde[1], players_of_this_rounde[2], score, roundschoices, players);
+                    score = Simulator(pay_off_matrix, game_steps_number, game_type, players_of_this_rounde[0], players_of_this_rounde[1], players_of_this_rounde[2], score, roundschoices, players);
                     //score.MakeItZero();
                 }
             }
@@ -245,7 +202,7 @@ int main(int argc, char* argv[])
         }
         else if ((game_type == 1) || (game_type == 2)) {//ну и без 
             std::cout << "do something\n";
-            score = Simulator(pay_off_matrix,game_steps_number, game_type, 0, 1, 2, score, roundschoices, players);
+            score = Simulator(pay_off_matrix, game_steps_number, game_type, 0, 1, 2, score, roundschoices, players);
             score.ShowBestGlobalScore();
             return 0;
         }
