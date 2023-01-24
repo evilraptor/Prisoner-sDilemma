@@ -177,7 +177,7 @@ char StrategyTeamplay::Getchoice(short game_type, int p, std::vector<int> _score
 char StrategyRevengeful::Getchoice(short game_type, int p, std::vector<int> _score, std::vector<std::vector<char>> _roundes, std::vector<char> _roundechoices) {
     char answer = 0;
     if (((_roundechoices[0] == 'D') && (p != 0)) || ((_roundechoices[1] == 'D') && (p != 1)) || ((_roundechoices[2] == 'D') && (p != 2))) {
-        int tmp = rand() / 3;
+        int tmp = rand() % 3;
         if (tmp == 2)
             answer = 'C';
         else
