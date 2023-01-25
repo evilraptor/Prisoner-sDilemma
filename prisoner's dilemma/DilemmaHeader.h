@@ -119,3 +119,5 @@ public:
 };
 
 bool CheckMatrix(int pay_off_matrix[8][6]);
+
+int Game(short game_type, int players_count, std::map<int, IStrategy*> players, int game_steps_number, int pay_off_matrix[8][6]);
