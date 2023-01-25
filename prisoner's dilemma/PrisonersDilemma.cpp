@@ -14,25 +14,33 @@ int main(int argc, char* argv[])
     int pay_off_matrix[8][6] = { 0 };
     int lines_in_matrix = 0;
     int counter = 0;
+    //return 0;
     while (!in.eof())// пробегаем пока не встретим конец файла eof
     {
+        short f = 0;
         char tmp;
         in >> tmp;//в пустоту считываем из файла числа
         int tmp2 = (int)tmp;
         if ((tmp != 'C') && (tmp != 'D'))//67C
             tmp2 = (int)tmp - 48;
         //int tmp2 = atoi(tmp);
-        pay_off_matrix[lines_in_matrix][counter] = tmp2;
-        counter++;
         if (counter > 5) {
             counter = 0;
+            //lines_in_matrix++;
+            f = 1;
+        }
+        pay_off_matrix[lines_in_matrix][counter] = tmp2;
+        if (f == 1) {
+            f = 0;
             lines_in_matrix++;
         }
+        counter++;
         //std::cout << temp;
         //count++;// увеличиваем счетчик числа чисел
     }
+    //return 0;
     CheckMatrix(pay_off_matrix);
-
+    in.close();
 
 
     StrategyFactory factory;
@@ -47,6 +55,7 @@ int main(int argc, char* argv[])
     typedef std::map<int, IStrategy*> Players;//1ое число номер игрока 2ое номер стратегии 
     Players players;//стратегии 
     int game_steps_number;
+    //return 0;
     if (argc == 1) {
         std::cout << "choice players and game mode (D-detailed, F-fast, T-tournament, H-help, E-to exit)\n";
         while (game_type == 0) {
@@ -99,36 +108,11 @@ int main(int argc, char* argv[])
             std::cout << "wrong steps count";
             return -1;
         }
-
-        Score score;
-        std::vector<std::vector<char>> roundschoices(game_steps_number);//вектор векторов ходов 
-        if (game_type == 3) {//это с турниром 
-            int* players_of_this_rounde = new int[players_count];
-            for (int i = 0; i < players_count; i++)players_of_this_rounde[i] = i + 1;
-            int players_count_in_single_game = 3;
-            //Print(a, m); 
-            for (int i = 0; i < players_count_in_single_game; i++) std::cout << players_of_this_rounde[i] << " ";
-            std::cout << "\n";
-            score = Simulator(pay_off_matrix, game_steps_number, game_type, players_of_this_rounde[0], players_of_this_rounde[1], players_of_this_rounde[2], score, roundschoices, players);
-            if (players_count >= players_count_in_single_game)
-            {
-                while (PlayersOfNewRounde(players_of_this_rounde, players_count, players_count_in_single_game)) {
-                    for (int i = 0; i < players_count_in_single_game; i++) std::cout << players_of_this_rounde[i] << " ";
-                    std::cout << "\n";
-                    score = Simulator(pay_off_matrix, game_steps_number, game_type, players_of_this_rounde[0], players_of_this_rounde[1], players_of_this_rounde[2], score, roundschoices, players);
-                    //score.MakeItZero();
-                }
-            }
-            score.ShowBestGlobalScore();
-            return 0;
-        }
-        else if ((game_type == 1) || (game_type == 2)) {//ну и без 
-            std::cout << "do something\n";
-            score = Simulator(pay_off_matrix, game_steps_number, game_type, 0, 1, 2, score, roundschoices, players);
-            score.ShowBestGlobalScore();
-            return 0;
-        }
-        return -1;
+         
+        int f;
+        f = Game(game_type, players_count, players, game_steps_number, pay_off_matrix);
+        if (f == 0) return 0;
+        else return -1;
     }
     else {
         for (int i = 1; i < argc - 1; i++) {
@@ -177,35 +161,10 @@ int main(int argc, char* argv[])
             std::cout << "wrong steps count";
             return -1;
         }
-        //}
-        Score score;
-        std::vector<std::vector<char>> roundschoices(game_steps_number);//вектор векторов ходов 
-        if (game_type == 3) {//это с турниром 
-            int* players_of_this_rounde = new int[players_count];
-            for (int i = 0; i < players_count; i++)players_of_this_rounde[i] = i + 1;
-            int players_count_in_single_game = 3;
-            //Print(a, m); 
-            for (int i = 0; i < players_count_in_single_game; i++) std::cout << players_of_this_rounde[i] << " ";
-            std::cout << "\n";
-            score = Simulator(pay_off_matrix, game_steps_number, game_type, players_of_this_rounde[0], players_of_this_rounde[1], players_of_this_rounde[2], score, roundschoices, players);
-            if (players_count >= players_count_in_single_game)
-            {
-                while (PlayersOfNewRounde(players_of_this_rounde, players_count, players_count_in_single_game)) {
-                    for (int i = 0; i < players_count_in_single_game; i++) std::cout << players_of_this_rounde[i] << " ";
-                    std::cout << "\n";
-                    score = Simulator(pay_off_matrix, game_steps_number, game_type, players_of_this_rounde[0], players_of_this_rounde[1], players_of_this_rounde[2], score, roundschoices, players);
-                    //score.MakeItZero();
-                }
-            }
-            score.ShowBestGlobalScore();
-            return 0;
-        }
-        else if ((game_type == 1) || (game_type == 2)) {//ну и без 
-            std::cout << "do something\n";
-            score = Simulator(pay_off_matrix, game_steps_number, game_type, 0, 1, 2, score, roundschoices, players);
-            score.ShowBestGlobalScore();
-            return 0;
-        }
-        return -1;
+
+        int f;
+        f = Game(game_type, players_count, players, game_steps_number, pay_off_matrix);
+        if (f == 0) return 0;
+        else return -1;
     }
 }
